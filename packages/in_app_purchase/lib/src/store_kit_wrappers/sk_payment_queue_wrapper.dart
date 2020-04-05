@@ -31,13 +31,17 @@ class SKPaymentQueueWrapper {
   ///
   /// We do not support instantiating a custom payment queue, hence the
   /// singleton. However, you can override the observer.
-  factory SKPaymentQueueWrapper() {
+  factory SKPaymentQueueWrapper({SKTransactionObserverWrapper observer}) {
+    if (_singleton == null) {
+      _singleton = SKPaymentQueueWrapper._(observer);
+    }
+
     return _singleton;
   }
 
-  static final SKPaymentQueueWrapper _singleton = SKPaymentQueueWrapper._();
+  static SKPaymentQueueWrapper _singleton;
 
-  SKPaymentQueueWrapper._() {
+  SKPaymentQueueWrapper._(this._observer) {
     callbackChannel.setMethodCallHandler(_handleObserverCallbacks);
   }
 
